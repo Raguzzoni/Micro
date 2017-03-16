@@ -1,0 +1,60 @@
+Q1. Quais as diferenças entre os barramentos de dados e de endereços?
+
+  O barramento de dados é responsável por transmitir dados entre as unidades.
+Já o barramento de endereços é responsável pela seleção do destino ou origem 
+em que o dado será escrito ou lido.
+
+
+Q2. Quais são as diferenças entre as memórias RAM e ROM?
+
+   A memória RAM (Random Access Memory) consegue acessar qualquer posição aleatória da memória,
+sem precisar ler dados desnecessário anteriormente.É uma memória volátil, 
+ou seja, todas as informações são perdidas ao se desligar o sistema.
+Já a memória ROM (Read Only Memory) só consegue mostrar os dados de forma sequencial, fazendo
+com que seja uma memória mais lenta. Esse tipo de momória não é perdida quando o sistema é 
+desligado, e é útil para gravar programas e códigos.
+
+
+Q3. Considere o código abaixo, de 12 linhas:
+
+    1.   #include <stdio.h>
+    2.   int main(void)
+    3.   {
+    4.      int i;
+    5.      printf("Insira um número inteiro: ");
+    6.      scanf("%d", &i);
+    7.      if(i%2)
+    8.         printf("%d eh impar.\n");
+    9.      else
+   10.         printf("%d eh par.\n");
+   11.      return 0;
+   12.   }
+
+Para este código, responda:
+	(a) A variável 'i' é armazenada na memória RAM ou ROM? Por quê?
+	    Neste momento a variável 'i' é salva na memória RAM, pois isso permite um acesso mais direto 
+	    a variável requerida. 
+	 
+	(b) O programa compilado a partir deste código é armazenado na memória RAM ou ROM? Por quê?
+	    Neste momento o código é armazenado na ROM, pois as informações não serão perdidas após o
+	    desligamento do sistema. 
+
+
+Q4. Quais são as diferenças, vantagens e desvantagens das arquiteturas Harvard e Von Neumann?
+
+    Na arquitetura de Harvard os barramentos de endereço e de dados são diferentes para a memória RAM e ROM, permitindo assim
+    uma leitura simultânea de dados e do programa
+
+
+Q5. Considere a variável inteira 'i', armazenando o valor 0x8051ABCD. Se 'i' é armazenada na memória a partir do endereço 0x0200, como ficam este byte e os seguintes, considerando que a memória é:
+	(a) Little-endian?
+	endereço        0x0200 0x0201  0x0202    0x203
+	dado		0xCD   0xAB    0x51      0x80
+
+	(b) Big-endian?
+	endereço        0x0200 0x0201  0x0202    0x203
+	dado		0x80   0x51    0xAB      0xCD
+
+
+Q6. Sabendo que o processador do MSP430 tem registradores de 16 bits, como ele soma duas variáveis de 32 bits?
+
