@@ -1,0 +1,117 @@
+;##################################### Programa que realiza multiplicação ##############################################
+	MULTIPLICA:  ;Multiplicaremos os dados que estiverem em R14 e em R15, ou seja, R14*R15
+push.w R4
+push.w R5
+push.w R6	     ;Armazenar o valor anterior de R4, R5 e R6 na pilha
+move.w #0,R4	     ;coloca o valor 0 em R4
+move.w #0,R5
+move.w #1,R6
+
+	LOOP:
+
+cmp R4,R15
+jeq FIM_LOOP
+add.w R14,R5
+add.w R6,R4
+jmp LOOP
+
+	FIM_LOOP:
+pop.w R6
+pop.w R5
+pop.w R4
+	ret
+	FIM_MULTIPLICA:
+;###############################################################################################################################
+	
+
+;QUESTÃO 2 DA LISTA
+;######################################Programa que Calcula potência x^n ######################################################
+	POTENCIA:  ;R15 elevado a R14
+
+ push.w R4
+ push.w R5
+ push.w R6
+ push.w R7
+mov.w R14,R4
+mov.w R15,R5
+mov.w #0,R6
+mov.w #1,R7
+	LOOP3:
+	cmp R4,R6
+	jeq FIM_LOOP3
+	mov.w R5,R14
+	mov.w R7,R15
+	call MULTIPLICA
+	mov.w R15,R7
+	add #1,R6
+	jmp LOOP3
+	FIM_LOOP3:
+ pop.w R4
+ pop.w R5
+ pop.w R6
+ pop.w R7
+	FIM_POTENCIA:
+;###############################################################################################################################
+
+;QUESTÃO 3 DA LISTA
+;#############################################Programa que calcula divisão de R14 por R15#######################################
+	DIVISAO:
+
+	push.b R4
+	push.b R5
+	push.b R6
+	push.b R7
+	move.b R4,R15
+	move.b R5,R14  ;Iremos dividir R14 por R15
+	move.b #1,R7
+	move.b #0,R6
+LOOP2:
+cmp R5,R4
+jge FIM_LOOP2
+sub R4,R5
+add R7,R6
+jmp LOOP2
+FIM_LOOP2:
+mov.b R6,R15	
+
+pop.b R4
+pop.b R5
+pop.b R6
+pop.b R7	
+	FIM_DIVISAO:
+;##################################################################################################################################
+
+;QUESTÃO 1 DA LISTA
+
+;##################################################Programa que calcula raiz quadrada###############################################
+	RAIZ_QUADRADA:  ;Utiliza a função anterior para calcular o algorítmo de raiz quadrada
+push.w R4
+push.w R5
+push.w R6
+mov.w #1,R4   ;x=1 inicialmente
+mov.w R15, R6
+	
+LOOP1:
+	move.w R4,R15
+	move.w R4, R14
+	call MULTIPLICA
+	mov.w R15,R5
+	cmp R5,R6
+	jeq FIM_LOOP
+	mov.w R6,R14
+	move.w R4,R15
+	call DIVISAO  ;Sub Rotina que irá dividir R14 por R15
+	add R15,R4	;R4=R4+S/R4
+	move.w #2,R15
+	move.w R4,R14
+	call DIVISAO	;R4=1/2*R4
+	move.w R15,R4
+	jmp LOOP1
+FIM_LOOP1:
+	move.w R6,R15
+pop.w R4
+pop.w R5
+pop.w R6
+ret
+	FIM_RAIZ_QUADRADA:
+;#######################################################################################################################################

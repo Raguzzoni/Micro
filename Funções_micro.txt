@@ -1,0 +1,117 @@
+função que multiplica dois valores
+
+Em c:
+
+unsigned int Mult_Unsignes2 (unsigned int a, unsigned b)
+{
+	unsigned unt i, c = 0;
+	for(i = 1; i<=b; i++)
+		c = c+a;
+	
+	return c;
+
+}
+
+
+Em assembly: 
+
+Mult_Unsigned2:  clr.w R13  ->  c = 0
+		 mov.w #1,R12 -> i = 1
+For_Mult2	 cmp R12, R14
+		 jl end_for_mult2
+		 add R15, R13
+		 jmp For_mult2
+end_for_mult2:   mov R13,R15
+ 		ret
+
+
+
+Função que divide 2 valores:
+
+Em c: 
+	unsigned int Div_Unsignes2 (unsigned int a, unsigned b)
+{
+	unsigned unt i, c = 0;
+	for(i = 0; a>=b; i++)
+		a = a-b;
+	
+	return i;
+
+}
+
+Função em assembly
+
+Div_Unsigned
+		clr R13 -> i = 0
+For_Div:	comp R14,R15
+		jl end_for_div
+		sub R14,R15
+		inc R13
+		jmp For_div
+End_For_div:    mov R13,R15
+		ret
+
+
+
+Função que calcula x^N
+
+int Potencia(int x, int N)
+{
+	int sign = 0, p =1;
+	if (N<0)
+	{
+	    N = -N;
+	    sign = 1;
+	}
+	while(N > 0)
+	{
+	    P = Mult_Signed(x,p);
+	    N--;
+	}
+	if(sign == 1)
+	    return Div_signed(1,p);
+ 	else
+	   return p;
+
+}
+
+
+código em assembly:
+
+Potencia:       push R4
+		push R5 
+ 		clr R4 -> sign = 0
+	  	mov #1, R5 -> p = 1
+	 	cmp #1,R14
+	  	jge while_pot
+	 	inv R14
+	 	inc R14
+          	Mov #1,R4
+while_pot	cmp #1, R14
+		tst R14
+		jz while_por_end
+		push R15
+	        push R14
+		mov R5, R14
+	        call mult_signed
+	        mov R15, R5
+		pop R14
+		pop R15
+		dec R14
+		jmp while_pot
+		cmp #1, R4
+		jne pot_end
+	 	mov #1, R15
+		mov R5, R14
+		call div_signed
+		pop R5
+		pop R4
+		ret
+pot_end 	mov R5,R15
+		pop R5
+		pop R4
+		ret
+		jl while_pot_end
+		
+	
+	

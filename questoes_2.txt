@@ -1,0 +1,193 @@
+;QUESTÃO 4 DA LISTA
+;#############################################Programa que calcula o resto da divisão de R14 por R15#######################################
+	RESTO:
+	push.b R4
+	push.b R5
+	push.b R6
+	push.b R7
+	move.b R4,R15
+	move.b R5,R14  ;Iremos dividir R14 por R15
+	move.b #1,R7
+	move.b #0,R6
+LOOP1:
+cmp R5,R4 	; Reparemos que ao final do loop, o registrador R5 estará armazenando o resto da divisão
+jge FIM_LOOP2
+sub R4,R5
+add R7,R6
+jmp LOOP1
+FIM_LOOP1:
+mov.b R5,R15	
+
+pop.b R4
+pop.b R5
+pop.b R6
+pop.b R7	
+	FIM_RESTO:
+;##################################################################################################################################
+
+;QUESTÃO 5 DA LISTA
+
+;################################### Análise da primalidade de um número###########################################################
+	PRIMALIDADE:
+push.b R4
+push.b R5
+
+;A variável de entrada é fornecida pelo registrador R15. Como R15 também é entrada da função resto.Então iremos armazenr a entrada em R5
+mov.w R15,R5 ;Número que se deseja saber a primalidade
+mov.w #1,R4 ; Variável auxiliar
+LOOP2:
+cmp R4,R5
+jeq PRIMO
+cmp #0,R15
+jeq NAO_PRIMO
+
+	mov.w R5,R14
+	mov.w R4,R15
+	call RESTO ;O resto da divisão é armazenado em R15
+	add #1,R4
+	jmp LOOP2
+
+PRIMO:
+mov.w #1, R15
+pop.b R4
+pop.b R5
+ret
+
+NAO_PRIMO
+mov.w #0,R15
+pop.b R4
+pop.b R5
+ret
+	FIM_PRIMALIDADE:
+;########################################################################################################################################
+
+;##############################################Cálculo do fatorial de um número n########################################################
+	FATORIAL:
+;A variável de entrada é fornecida por R15. Como esse registrador é entrada de outras funções, vamos aramazená-lo em R5
+	push.b R5
+	push.b R4 ;Variável auxiliar
+	push.b R6 ;Variável auxiliar
+	move.w R15,R5
+	move.w #1,R4
+	move.w #1,R6
+FOR:
+	cmp R4,R5
+	jeq END_FOR
+	
+	move.w R4,R15
+	move.w R6,R14
+	call MULTIPLICA
+	move R15,R6
+	add #1,R4
+	jmp FOR
+END_FOR:
+	move.w R6,R15
+	pop.b R5
+	pop.b R4
+	pop.b R6
+	ret
+
+;########################################################################################################################################
+
+;QUESTAO 6 DA LISTA (EXTRA)
+
+;############################################# Cálculo do Duplo fatorial de n ###########################################################	
+	DUPLO_FATORIAL
+;A variável de entrada é fornecida por R15. Como R15 é entrada de outras funções, vamos armazenar a entrada em R5.
+	push.b R5
+	mov.w R15,R5.
+	mov.w R5, R14
+	mov.w #2, R15
+	call RESTO
+	cmp #0,R15
+	jeq DUPLO_FATORIAL_PAR
+
+		DUPLO_FATORIAL_IMPAR:
+	push.b R4
+	push.b R5
+	push.b R6
+	mov.w #1,R4	
+	mov.w #1,R6
+LOOP3:
+	cmp R4,R5
+	jeq FIM_LOOP3
+	mov.w R4,R15
+	mov.w R6,R14
+	call MULTIPLICAÇÃO
+	mov.w R15,R6
+	add #2,R4
+	jmp LOOP3
+FIM_LOOP3:
+	pop.b R4
+	pop.b R5
+	pop.b R6
+	ret
+		DUPLO_FATORIAL_PAR
+	push.b R4
+	push.b R5
+	push.b R6
+	mov.w #2,R4	
+	mov.w #1,R6
+LOOP4:
+	cmp R4,R5
+	jeq FIM_LOOP3
+	mov.w R4,R15
+	mov.w R6,R14
+	call MULTIPLICAÇÃO
+	mov.w R15,R6
+	add #2,R4
+	jmp LOOP3
+FIM_LOOP4:
+	pop.b R4
+	pop.b R5
+	pop.b R6
+	ret
+	
+	FIM_DUPLO_FATORIAL:
+;#############################################################################################################################################################
+
+;QUESTÃO 7 DA LISTA
+
+;############################################# Cálculo da função exponencial em série de Taylor ##############################################################
+	EXP_TAYLOR:
+
+push.b R5 ;Segunda variável auxiliar  - Denominador
+push.b R6 ;Terceira variável auxiliar  - Expoente
+push.b R7 ; Quarta variável auxiliar - Soma
+push.b R8 ;Variável para armazenar a entrada R15	
+push.b R9; Variável utilizada para armazenar a saída das funções para usar depos
+	mov.w #1,R7
+	mov.w R15,R8
+	mov.w #1,R5
+	mov.w #1,R6
+LOOP5:
+	cmp #20,R5
+	jeq FIM_LOOP5
+	
+	mov.w R5,R15
+	call FATORIAL
+	mov.w R15,R9
+
+	mov.w R8,R15
+	mov.w R6,R14
+	call POTENCIA
+
+	mov.w R15,R14
+	mov.w R9,R15
+	DIVISAO
+
+	add R15,R7		
+	add #1, R6
+	add #1, R5
+	jmp LOOP5
+FIM_LOOP5:
+mov.w R7,R15
+
+pop.b R5
+pop.b R6
+pop.b R7
+pop.b R8
+pop.b R9
+ret	
+	FIM_EXP_TAYLOR:
+;######################################################################################################################################################
