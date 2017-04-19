@@ -1,0 +1,30 @@
+Função Fibonacci:
+
+void Fibonacci (int A[], int n)
+{
+	int i;
+	A[0] = 0;
+	A[1] = 1;
+	for(i = 2; i < N; i++)
+	{
+	    A[i] = A[i - 1] + A[i - 2];
+	}
+
+}
+
+Assembly-
+
+Fibonacci:  clr 0(R15)
+	    mov #1, 2(R15)
+	    mov #2, R13
+For_fibo    cmp R14,R13
+	    jge for_fibo_end
+	    mov R13, R12
+	    sub #2,R12
+	    add R12,R12  ou rla R12
+	    add R15,R12
+	    mov 0(R12), 4(R12)
+	    add 2(R12), 4(R12)
+	    inc R13
+	    jmp For_fibo
+for_fibo_end   ret
