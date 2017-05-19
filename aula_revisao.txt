@@ -1,0 +1,197 @@
+#include <msp.balbalbal>
+# define CHPX1 BIT0
+# define CHPX2 BIT1
+# Define CHPX3 BIT2
+
+int main(void)
+{
+    WDTCTL = WDTPW|WDTHOLD
+    while(1) {
+	
+	P1DIR = CHPX1 + CHPX2;
+	P1OUT = CHPX1;
+	P1OUT = CHPX2;
+	P1DIR = CHPX2 + CHPX3;
+	P1OUT = CHPX2;
+	P1OUT = CHPX3;
+        P1DIR = CHPX1 + CHPX3;
+	P1OUT = CHPX1;
+	P1OUT = CHPX3;
+	}
+    return 1;
+}
+
+
+---------------------------------------------------------------------------------
+
+
+#include <msp.balbalbal>
+#define CHPX1 BIT0
+#define CHPX2 BIT1
+#Define CHPX3 BIT2
+#Define CHPXS (CHPX1 +CHPX2 + CHPX3)
+
+void charlie_on(char VHPX_out; char CHPX_on)
+{
+    P1OUT &= ~CHPXS;
+    P1DIR &= ~CHPXS;
+    P!DIR |= CHPX_out;
+    P1OUT |= CHPX_on; 
+}
+
+
+int main(void)
+{
+    WTDCTL = WDTPW|WDTHOLD
+    while (1)
+	{
+	    charlie_on(CHPX1 + CHPX2; CHPX1 )
+	    charlie_on(CHPX1 + CHPX2; CHPX2 )
+	    charlie_on(CHPX2 + CHPX3; CHPX2 )
+	    charlie_on(CHPX2 + CHPX3; CHPX3 )
+	    charlie_on(CHPX1 + CHPX3; CHPX1 )
+	    charlie_on(CHPX1 + CHPX3; CHPX3 )	
+
+	}
+
+	return 0;
+} 
+
+
+--------------------------------------------------------------------
+
+int main (void)
+{
+    char outs[] = {CHPX1 + CHPX2, CHPX1 + CHPX2, CHPX2 + CHPX3, CHPX2 + CHPX3,
+		   CHPX1 + CHPX3, CHPX1 + CHPX3};
+    char ons[] = {CHPX1, CHPX2, CHPX2, CHPX3, CHPX1, CHPX3};
+    char i;
+	
+    WTDCTL = WDTPW|WDTHOLD
+    while(1)
+    {
+	for(i = 0; i<6; i++)
+	    charlie_on(outs[i], ons[i]);
+
+    }
+    return 0;
+}
+
+---------------------------------------------------------------------
+
+int main (void)
+{
+    unsigned int i;
+    WTDCTL = WDTPW|WDTHOLD;
+    
+
+    while(1){
+    for(i = 0; i<0xffff; i++)
+    {
+	charlie_on (CHPX1 + CHPX2, CHPX1);
+        charlie_on (CHPX1 + CHPX2, CHPX1);
+    } 
+
+    for(i = 0; i<0xffff; i++)
+    {
+	charlie_on (CHPX2 + CHPX3, CHPX2);
+        charlie_on (CHPX2 + CHPX3, CHPX3);
+    } 
+
+    for(i = 0; i<0xffff; i++)
+    {
+	charlie_on (CHPX1 + CHPX3, CHPX1);
+        charlie_on (CHPX1 + CHPX3, CHPX3);
+    } 
+
+}
+
+}
+
+-------------------------------------------------------------
+
+void atraso(volatile unsigned int x) --> atrasa x milisegundos
+{
+    TACCR0 = 1000 - 1;
+    TACTL |= TACLR;
+    TACTL = TASSEL_2 + ID_0 + MC_1; --> TASSEL escolhe o clk, ID divide o clk, e MC modo de controle
+
+    while(x > 0)
+	{
+           x--;
+	while((TACTL & TAIFG) == 0);
+	TACTL &= ~TAIFG;
+	}
+
+    TACTL = MC_0;
+
+}
+
+------------------------------------------------------------
+
+int main(void)
+{
+    WTDCTL = WDTPW|WDTHOLD;
+    P1OUT &= ~BIT0;
+    P1DIR |= BIT0;
+
+    TACCR0 = 10000 -1;
+    TACTL = TASSEL_2 + ID_0 + MC_1 + TAIE; 
+    _BIS_SR(GIE + LPM0_bits);
+    return 0;
+
+}
+
+interrupt(TAQ...) TAISR(void)
+{
+    P1OUT ^= BIT0;
+    TACTL &= ~TAIFG;
+
+
+}
+
+-----------------------------------------------------------
+
+questão paralelo serial
+
+
+    P1DIR = 0;
+    P2DIR |= BIT0;
+
+void paralelo_serial(void)
+
+{
+    char b, m;   m -> máscara = 0000 0001
+    m = BIT0;
+    P2OUT |= BIT0;
+    ATRASO(1);
+
+    for(b = 0; b < 8; b++)
+    {
+	if(P1IN & m) P2OUT |=BIT0;
+        else P2OUT  &= BIT0;
+	ATRASO(1);
+        m *= 2;  --> deslocar a máscara pra direita
+
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
